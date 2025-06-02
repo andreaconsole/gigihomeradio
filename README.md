@@ -1,4 +1,4 @@
-# gigihomeradio
+# GiGiHomeRadio
 
 # Kodi Radio Button Controller
 
