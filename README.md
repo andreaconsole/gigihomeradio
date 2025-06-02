@@ -33,11 +33,17 @@ Control Kodi web radio streams using GPIO buttons on a Raspberry Pi.
 
 ## ⚙️ Setup
 
+
+1. Connect hardware (2 buttons + rotary encoder)
+2. Edit `stations.txt` with your desired radio URLs
+3. Run:
+
 ```bash
 chmod +x install.sh
 ./install.sh
 ```
 
+Enjoy!
 
 
 ## Optional: instead of setting a service, you can edit /etc/rc.local to Auto-Start GPIO Script:
@@ -47,4 +53,45 @@ sudo -u osmc python3 /home/osmc/gpio_radio_button.py &
 sudo -u osmc python3 /home/osmc/gpio_rotary_volume.py &
 ```
 
-## and manually copy autoexec.py to /home/osmc/.kodi/userdata/autoexec.py
+and then manually copy autoexec.py to /home/osmc/.kodi/userdata/autoexec.py
+
+
+## 📁 Automatically Mount USB on Boot
+
+To make sure Kodi can access your USB stick at startup:
+
+1. Plug in the USB stick and run:
+
+   ```bash
+   lsblk -o NAME,FSTYPE,SIZE,MOUNTPOINT,UUID
+   ```
+
+2. Find your USB partition (e.g. `sda1`) and copy its UUID.
+
+3. Edit `/etc/fstab`:
+
+   ```bash
+   sudo nano /etc/fstab
+   ```
+
+4. Add this line (replace UUID and filesystem type if needed):
+
+   ```
+   UUID=YOUR-UUID-HERE  /media/usb  vfat  defaults,noauto,x-systemd.automount,x-systemd.device-timeout=5  0  0
+   ```
+
+5. Create the mount folder:
+
+   ```bash
+   sudo mkdir -p /media/usb
+   ```
+
+6. Test it:
+
+   ```bash
+   sudo mount -a
+   ls /media/usb
+   ```
+
+If you see the contents of your USB, it will now auto-mount at boot time.
+
