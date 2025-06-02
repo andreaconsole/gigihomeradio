@@ -1,0 +1,15 @@
+[Unit]
+Description=Web Radio Button Controller
+After=multi-user.target
+
+[Service]
+Type=simple
+User=osmc
+ExecStart=/usr/bin/python3 /home/osmc/gpio_radio_button.py
+Restart=always
+RestartSec=5
+StandardOutput=append:/home/osmc/gpio_stdout.log
+StandardError=append:/home/osmc/gpio_stderr.log
+
+[Install]
+WantedBy=multi-user.target
