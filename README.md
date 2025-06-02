@@ -15,7 +15,9 @@ Control Kodi web radio streams using GPIO buttons on a Raspberry Pi.
 - **Next station**: GPIO 17 (Pin 11)
 - **Previous station**: GPIO 27 (Pin 13)
 - Both wired to GND (internal pull-up used)
-
+- **Volume control**: CLK on GPIO 5 (Pin 29) and DT on GPIO 6 (Pin 31)
+- **Mute control**: GPIO22 (Pin 15) – Optional pushbutton
+  
 ## 📂 File Placement
 
 | File                    | Destination                              |
