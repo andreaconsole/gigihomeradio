@@ -1,8 +1,11 @@
 # GiGiHomeRadio
 
-# Kodi Radio Button Controller
+This is a lightweight plugin for OSMC that turns a Raspberry Pi into a dedicated web radio tuner for use with a hi-fi audio system. On startup, it automatically begins streaming a predefined internet radio station.
+The system is designed for simple, hardware-based control:
+- A rotary encoder acts as a volume knob, allowing smooth analog-style adjustment.
+- Two pushbuttons let the user switch between preset stations stored on a USB stick.
 
-Control Kodi web radio streams using GPIO buttons on a Raspberry Pi.
+The goal is to replicate the intuitive feel of a traditional radio tuner, while leveraging the flexibility of modern internet radio and Kodi-based media playback.
 
 ## 🧩 Requirements
 
