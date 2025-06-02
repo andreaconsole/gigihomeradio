@@ -7,7 +7,8 @@ Control Kodi web radio streams using GPIO buttons on a Raspberry Pi.
 ## 🧩 Requirements
 
 - Raspberry Pi with OSMC or Kodi
-- Two pushbuttons
+- Two pushbuttons for changing the station
+- A volume control with pushbutton
 - One USB stick with `stations.txt` file (web radio stream URLs)
 
 ## 🎚 Buttons
