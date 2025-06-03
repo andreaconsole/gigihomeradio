@@ -4,7 +4,7 @@ import time
 import logging
 import sys
 
-STATION_FILE = "/media/usb/stations.txt"
+STATION_FILE = "/media/usb/radio_stations.m3u"
 CURRENT_INDEX_FILE = "/home/osmc/.current_station"
 LOGFILE = "/home/osmc/radio_log.txt"
 
@@ -14,7 +14,7 @@ logging.basicConfig(filename=LOGFILE, level=logging.INFO,
 def get_station_list():
     try:
         with open(STATION_FILE, "r") as f:
-            return [line.strip() for line in f if line.strip()]
+            return [line.strip() for line in f if line.strip() and not line.startswith("#")]
     except Exception as e:
         logging.error("Error reading station list: %s", str(e))
         return []
