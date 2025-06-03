@@ -4,7 +4,7 @@ import subprocess
 
 CLK = 5     # GPIO5 (Pin 29)
 DT = 6      # GPIO6 (Pin 31)
-SW = 22     # GPIO22 (Pin 15) – Optional pushbutton
+SW = 13     # GPIO13 (Pin 33) – Optional pushbutton
 
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(CLK, GPIO.IN, pull_up_down=GPIO.PUD_UP)
