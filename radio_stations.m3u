@@ -1,0 +1,5 @@
+#EXTM3U
+#EXTINF:-1, NPO Radio 1
+http://icecast.omroep.nl/radio1-bb-mp3
+#EXTINF:-1, Radio Swiss Pop
+http://stream.srg-ssr.ch/m/rsp/mp3_128
