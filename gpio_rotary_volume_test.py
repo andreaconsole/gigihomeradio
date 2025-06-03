@@ -5,7 +5,7 @@ import time
 # Rotary encoder pins
 CLK = 5     # GPIO5 (Pin 29)
 DT = 6      # GPIO6 (Pin 31)
-SW = 22     # GPIO22 (Pin 15) – Optional pushbutton
+SW = 13     # GPIO13 (Pin 33) – Optional pushbutton
 
 volume = 50
 last_volume = volume
