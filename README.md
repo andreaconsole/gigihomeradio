@@ -80,7 +80,7 @@ chmod +x install.sh
 Enjoy!
 
 
-## 📁 Automatically Mount USB on Boot
+##  :white_check_mark: Automatically Mount USB on Boot
 
 To make sure Kodi can access your USB stick at startup as media/usb:
 
@@ -118,4 +118,20 @@ To make sure Kodi can access your USB stick at startup as media/usb:
    ```
 
 If you see the contents of your USB, it will now auto-mount at boot time.
+
+## :x: Possible issues
+
+ ```bash
+error: File "/home/osmc/gpio_radio_button.py", line 1, in <module>
+    import RPi.GPIO as GPIO
+ModuleNotFoundError: No module named 'RPi'
+ ```
+
+This error means the RPi.GPIO Python module isn't installed on your system — a common issue on OSMC, since it’s not included by default.
+
+ ```bash
+sudo apt-get update
+sudo apt-get install python3-rpi.gpio
+ ```
+This installs the correct GPIO library for Python 3.
 
