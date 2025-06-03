@@ -1,2 +1,0 @@
-http://icecast.omroep.nl/radio1-bb-mp3
-http://stream.srg-ssr.ch/m/rsp/mp3_128
