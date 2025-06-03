@@ -12,7 +12,7 @@ The goal is to replicate the intuitive feel of a traditional radio tuner, while 
 - Raspberry Pi with OSMC or Kodi
 - Two pushbuttons for changing the station
 - A volume control with pushbutton
-- One USB stick with `stations.txt` file (web radio stream URLs)
+- One USB stick with `radio_stations.m3u` file (web radio stream URLs)
 
 ## 🎚 Buttons
 
@@ -25,7 +25,7 @@ The goal is to replicate the intuitive feel of a traditional radio tuner, while 
 | **Mute Button**  | GPIO13   | Pin 33              | Pushbutton (optional)                 |
 | **GND**          | —        | Pin 14 (or any GND) | Shared ground for all buttons/encoder |
 
-Pins are numbered physically, from top-left to bottom-right, like this (on Pi 3A+ 40-pin GPIO header) when viewed from above (usb ports facing down, GPIO header on the right):
+On the Raspberry Pi, pins are numbered physically, from top-left to bottom-right, like this (on Pi 3A+ 40-pin GPIO header) when viewed from above (usb ports facing down, GPIO header on the right):
 
 | left | right |
 | ----------: | :---------- |
@@ -60,16 +60,16 @@ Pins are numbered physically, from top-left to bottom-right, like this (on Pi 3A
 | `radio_player.py`            | `/home/osmc/`                            |
 | `gpio_radio_button.py`       | `/home/osmc/`                            |
 | `gpio_rotary_volume.py`      | `/home/osmc/`                            |
+| `radio_player.service`       | `/etc/systemd/system/`                   |
 | `gpio_radio_button.service`  | `/etc/systemd/system/`                   |
 | `gpio_rotary_volume.service` | `/etc/systemd/system/`                   |
-| `radio_stations.m3u`         | `/media/usb/stations.txt`                |
-| `autoexec.py`                | `/home/osmc/.kodi/userdata/autoexec.py`  |
+| `radio_stations.m3u`         | `/media/usb/`                            |
 
 ## ⚙️ Setup
 
 
 1. Connect hardware (2 buttons + rotary encoder)
-2. Edit `stations.txt` with your desired radio URLs
+2. Edit `radio_stations.m3u` with your desired radio URLs
 3. Run:
 
 ```bash
