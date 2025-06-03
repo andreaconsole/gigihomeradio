@@ -16,23 +16,54 @@ The goal is to replicate the intuitive feel of a traditional radio tuner, while 
 
 ## 🎚 Buttons
 
-- **Next station**: GPIO 17 (Pin 11)
-- **Previous station**: GPIO 27 (Pin 13)
-- Both wired to GND (internal pull-up used)
-- **Volume control**: CLK on GPIO 5 (Pin 29) and DT on GPIO 6 (Pin 31)
-- **Mute control**: GPIO22 (Pin 15) – Optional pushbutton
+| Function         | GPIO Pin | Physical Pin        | Connection to                         |
+| ---------------- | -------- | ------------------- | ------------------------------------- |
+| **Next Station** | GPIO17   | Pin 11              | Pushbutton 1 leg                      |
+| **Prev Station** | GPIO27   | Pin 13              | Pushbutton 2 leg                      |
+| **Volume CLK**   | GPIO5    | Pin 29              | Rotary encoder CLK pin                |
+| **Volume DT**    | GPIO6    | Pin 31              | Rotary encoder DT pin                 |
+| **Mute Button**  | GPIO13   | Pin 33              | Pushbutton (optional)                 |
+| **GND**          | —        | Pin 14 (or any GND) | Shared ground for all buttons/encoder |
+
+Pins are numbered physically, from top-left to bottom-right, like this (on Pi 3A+ 40-pin GPIO header) when viewed from above (usb ports facing down, GPIO header on the right):
+
+| left | right |
+| ----------: | :---------- |
+|  3.3V (1)| (2) 5V|
+| GPIO2 (3)| (4) 5V|
+| GPIO3 (5)| (6) GND|
+| GPIO4 (7)| (8) GPIO14|
+|   GND (9)| (10) GPIO15|
+|**GPIO17** (11)| (12) GPIO18|
+|**GPIO27** (13)| (14) **GND**|
+|GPIO22 (15)| (16) GPIO23|
+| 3.3V (17)| (18) GPIO24|
+|GPIO10 (19)| (20) GND|
+| GPIO9 (21)| (22) GPIO25|
+|GPIO11 (23)| (24) GPIO8|
+|   GND (25)| (26) GPIO7|
+| GPIO0 (27)| (28) GPIO1|
+| **GPIO5** (29)| (30) GND|
+| **GPIO6** (31)| (32) GPIO12|
+|**GPIO13** (33)| (34) **GND**|
+|GPIO19 (35)| (36) GPIO16|
+|GPIO26 (37)| (38) GPIO20|
+|   GND (39)| (40) GPIO21|
+
+
+
   
 ## 📂 File Placement
 
-| File                    | Destination                              |
-|-------------------------|------------------------------------------|
-| `radio_player.py`       | `/home/osmc/`                            |
-| `gpio_radio_button.py`  | `/home/osmc/`                            |
-| `gpio_rotary_volume.py` | `/home/osmc/`                            |
-| `radio-buttons.service` | `/etc/systemd/system/`                   |
-| `rotary-volume.service` | `/etc/systemd/system/`                   |
-| `stations.txt`          | `/media/usb/stations.txt`                |
-| `autoexec.py`           | `/home/osmc/.kodi/userdata/autoexec.py`  |
+| File                         | Destination                              |
+|------------------------------|------------------------------------------|
+| `radio_player.py`            | `/home/osmc/`                            |
+| `gpio_radio_button.py`       | `/home/osmc/`                            |
+| `gpio_rotary_volume.py`      | `/home/osmc/`                            |
+| `gpio_radio_button.service`  | `/etc/systemd/system/`                   |
+| `gpio_rotary_volume.service` | `/etc/systemd/system/`                   |
+| `radio_stations.m3u`         | `/media/usb/stations.txt`                |
+| `autoexec.py`                | `/home/osmc/.kodi/userdata/autoexec.py`  |
 
 ## ⚙️ Setup
 
@@ -49,19 +80,9 @@ chmod +x install.sh
 Enjoy!
 
 
-## Optional: instead of setting a service, you can edit /etc/rc.local to Auto-Start GPIO Script:
-
-```bash
-sudo -u osmc python3 /home/osmc/gpio_radio_button.py &
-sudo -u osmc python3 /home/osmc/gpio_rotary_volume.py &
-```
-
-and then manually copy autoexec.py to /home/osmc/.kodi/userdata/autoexec.py
-
-
 ## 📁 Automatically Mount USB on Boot
 
-To make sure Kodi can access your USB stick at startup:
+To make sure Kodi can access your USB stick at startup as media/usb:
 
 1. Plug in the USB stick and run:
 
