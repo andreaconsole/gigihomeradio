@@ -5,7 +5,7 @@ import logging
 
 BUTTON_NEXT = 17  # GPIO17 - Pin 11
 BUTTON_PREV = 27  # GPIO27 - Pin 13
-LOGFILE = "/home/osmc/gpio_log.txt"
+LOGFILE = "/mnt/writestore/gpio_log.txt"
 
 logging.basicConfig(filename=LOGFILE, level=logging.INFO,
                     format='%(asctime)s - %(message)s')
