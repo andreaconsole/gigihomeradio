@@ -1,7 +1,7 @@
 #!/bin/bash
 
 echo "Copying scripts to /home/osmc..."
-cp radio_player.py gpio_radio_button.py /home/osmc/
+cp radio_player.py gpio_radio_button.py gpio_rotary_volume.py /home/osmc/
 
 chmod +x /home/osmc/*.py
 
