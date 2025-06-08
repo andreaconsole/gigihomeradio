@@ -4,9 +4,9 @@ import time
 import logging
 import sys
 
-STATION_FILE = "/media/usb/radio_stations.m3u"
-CURRENT_INDEX_FILE = "/home/osmc/.current_station"
-LOGFILE = "/home/osmc/radio_log.txt"
+STATION_FILE = "/mnt/writestore/stations.m3u"
+CURRENT_INDEX_FILE = "/mnt/writestore/.current_station"
+LOGFILE = "/mnt/writestore/radio_log.txt"
 
 logging.basicConfig(filename=LOGFILE, level=logging.INFO,
                     format='%(asctime)s - %(message)s')
