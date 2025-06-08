@@ -34,8 +34,13 @@ def get_current_index():
         return 0
 
 def save_current_index(index):
-    with open(CURRENT_INDEX_FILE, "w") as f:
-        f.write(str(index))
+    try:
+        with open(CURRENT_INDEX_FILE, "w") as f:
+            f.write(str(index))
+        logging.info(f"Saved current station index: {index}")
+    except Exception as e:
+        logging.error(f"Failed to save current station index: {e}")
+
 
 def play_current_station():
     stations = get_station_list()
