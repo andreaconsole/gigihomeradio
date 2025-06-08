@@ -1,5 +1,23 @@
 #EXTM3U
-#EXTINF:-1, NPO Radio 1
-http://icecast.omroep.nl/radio1-bb-mp3
-#EXTINF:-1, Radio Swiss Pop
-http://stream.srg-ssr.ch/m/rsp/mp3_128
+#EXTINF:-1, NAXI Radio Love
+http://109.206.96.34:8100
+#EXTINF:-1, Antenna 1
+http://a1-it.newradio.it/stream
+#EXTINF:-1, Radio 2
+http://icestreaming.rai.it/2.mp3
+#EXTINF:-1, RAM Power
+http://icstream.rds.radio/ram
+#EXTINF:-1, NAXI Radio Rock
+http://109.206.96.34:8180
+#EXTINF:-1, NAXI Radio Jazz
+http://109.206.96.34:8170
+#EXTINF:-1, NAXI Radio Gold
+http://109.206.96.34:8060
+#EXTINF:-1, Radio News
+http://stream5.xdevel.com/audio5s975889-479/stream/icecast.audio
+#EXTINF:-1, Classic Rock
+http://strm112.1.fm/rockclassics_mobile_mp3
+#EXTINF:-1, Lounge Jazz
+http://91.121.51.19:8042/
+#EXTINF:-1, NAXI Radio Chill
+http://naxidigital-chill48.streaming.rs:8415/
