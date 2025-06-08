@@ -9,12 +9,12 @@ The goal is to replicate the intuitive feel of a traditional radio tuner, while 
 
 ## 🧩 Requirements
 
-- Raspberry Pi with OSMC or Kodi
-- Two pushbuttons for changing the station
-- A volume control with pushbutton
-- One USB stick with `radio_stations.m3u` file (web radio stream URLs)
+- Raspberry Pi
+- an SD card with OSMC
+- (optional) Two pushbuttons for changing the station
+- (optional) A volume control with pushbutton
 
-## 🎚 Buttons
+## 🎚 Buttons (optional)
 
 | Function         | GPIO Pin | Physical Pin        | Connection to                         |
 | ---------------- | -------- | ------------------- | ------------------------------------- |
@@ -22,7 +22,7 @@ The goal is to replicate the intuitive feel of a traditional radio tuner, while 
 | **Prev Station** | GPIO27   | Pin 13              | Pushbutton 2 leg                      |
 | **Volume CLK**   | GPIO5    | Pin 29              | Rotary encoder CLK pin                |
 | **Volume DT**    | GPIO6    | Pin 31              | Rotary encoder DT pin                 |
-| **Mute Button**  | GPIO13   | Pin 33              | Pushbutton (optional)                 |
+| **Mute Button**  | GPIO13   | Pin 33              | Pushbutton                            |
 | **GND**          | —        | Pin 14 (or any GND) | Shared ground for all buttons/encoder |
 
 On the Raspberry Pi, pins are numbered physically, from top-left to bottom-right, like this (on Pi 3A+ 40-pin GPIO header) when viewed from above (usb ports facing down, GPIO header on the right):
@@ -63,13 +63,13 @@ On the Raspberry Pi, pins are numbered physically, from top-left to bottom-right
 | `radio_player.service`       | `/etc/systemd/system/`                   |
 | `gpio_radio_button.service`  | `/etc/systemd/system/`                   |
 | `gpio_rotary_volume.service` | `/etc/systemd/system/`                   |
-| `radio_stations.m3u`         | `/mnt/writestore`                        |
+| `stations.m3u`               | `/mnt/writestore`                        |
 
 ## ⚙️ Setup
 
 
 1. Connect hardware (2 buttons + rotary encoder)
-2. Edit `radio_stations.m3u` with your desired radio URLs
+2. Edit `stations.m3u` with your desired radio URLs
 3. Run:
 
 ```bash
@@ -216,6 +216,11 @@ mount | grep tmpfs
 ```
 
 - Use `dmesg` and Kodi logs to troubleshoot startup issues.
+Since the root partition is mounted as read-only (ro), you can temporarily remount it as read-write (rw) using the following command without unmounting it. This change will only last until the next reboot, after which the root partition will revert to read-only automatically.
+
+```bash
+sudo mount -o remount,rw /
+```
 
 ---
 
