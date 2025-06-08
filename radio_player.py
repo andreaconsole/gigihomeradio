@@ -14,15 +14,22 @@ logging.basicConfig(filename=LOGFILE, level=logging.INFO,
 def get_station_list():
     try:
         with open(STATION_FILE, "r") as f:
-            return [line.strip() for line in f if line.strip() and not line.startswith("#")]
+            stations = [line.strip() for line in f if line.strip() and not line.strip().startswith("#")]
+        logging.info(f"Station list loaded: {stations}")
+        return stations
     except Exception as e:
         logging.error("Error reading station list: %s", str(e))
         return []
 
 def get_current_index():
     try:
-        with open(CURRENT_INDEX_FILE, "r") as f:
-            return int(f.read().strip())
+        idx = int(open(CURRENT_INDEX_FILE).read().strip())
+        stations = get_station_list()
+        if not stations:
+            return 0
+        if idx < 0 or idx >= len(stations):
+            return 0
+        return idx
     except:
         return 0
 
