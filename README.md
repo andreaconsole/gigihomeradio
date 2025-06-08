@@ -63,7 +63,7 @@ On the Raspberry Pi, pins are numbered physically, from top-left to bottom-right
 | `radio_player.service`       | `/etc/systemd/system/`                   |
 | `gpio_radio_button.service`  | `/etc/systemd/system/`                   |
 | `gpio_rotary_volume.service` | `/etc/systemd/system/`                   |
-| `radio_stations.m3u`         | `/media/usb/`                            |
+| `radio_stations.m3u`         | `/mnt/writestore`                        |
 
 ## ⚙️ Setup
 
@@ -80,44 +80,155 @@ chmod +x install.sh
 Enjoy!
 
 
-##  :white_check_mark: Automatically Mount USB on Boot
+# OSMC Read-Only Root & Writable Partition Setup
 
-To make sure Kodi can access your USB stick at startup as media/usb:
+This document describes how to:
 
-1. Plug in the USB stick and run:
+- Create a writable partition (`writestore`) for Kodi data and other write needs.
+- Make the root filesystem read-only for stability and SD card protection.
+- Configure Kodi to work with the writable partition.
+- Use tmpfs for writable temporary directories.
+- Control root mounting via kernel command line or `/etc/fstab`.
 
-   ```bash
-   lsblk -o NAME,FSTYPE,SIZE,MOUNTPOINT,UUID
+---
+
+## Partition Setup
+
+1. Create a third partition (`/dev/mmcblk0p3`) formatted as `ext4` for writable data:
+
+```bash
+sudo parted /dev/mmcblk0 mkpart primary ext4 100% 100%  # Example, adjust sizes accordingly
+sudo mkfs.ext4 /dev/mmcblk0p3
+sudo mkdir /mnt/writestore
+sudo mount /dev/mmcblk0p3 /mnt/writestore
+```
+
+2. Add to `/etc/fstab` for automatic mounting:
+
+```
+/dev/mmcblk0p3 /mnt/writestore ext4 defaults,noatime,nofail,x-systemd.device-timeout=5 0 2
+```
+
+---
+
+## Root Filesystem Read-Only Setup
+
+### Mounting root (`/dev/mmcblk0p2`) read-only
+
+You have two ways to make the root filesystem mount read-only:
+
+1. **Via `/etc/fstab`**
+
+   Add or keep this line in `/etc/fstab`:
+
+   ```
+   /dev/mmcblk0p2  /    ext4  ro,noatime  0 1
    ```
 
-2. Find your USB partition (e.g. `sda1`) and copy its UUID.
+   - This remounts the root filesystem as read-only during boot.
+   - May cause a slightly slower boot time.
+   - Useful if you want explicit control in fstab.
 
-3. Edit `/etc/fstab`:
+2. **Via kernel command line (`/boot/cmdline.txt`)**
 
-   ```bash
-   sudo nano /etc/fstab
+   If you comment out the root entry in `/etc/fstab`, the kernel mounts the root filesystem at boot using `/boot/cmdline.txt`.
+
+   You must include the `ro` option there, for example:
+
+   ```
+   root=/dev/mmcblk0p2 ro rootfstype=ext4 rootwait quiet osmcdev=rbp2
    ```
 
-4. Add this line (replace UUID and filesystem type if needed):
+   - The `ro` option tells the kernel to mount root as read-only initially.
+   - This is the recommended way if you rely on initramfs or want faster boot.
+   - Make sure `/etc/fstab` does **not** remount root read-write afterward.
 
-   ```
-   UUID=YOUR-UUID-HERE  /media/usb  vfat  defaults,noauto,x-systemd.automount,x-systemd.device-timeout=5  0  0
-   ```
+---
 
-5. Create the mount folder:
+### Verifying the root filesystem mode
 
-   ```bash
-   sudo mkdir -p /media/usb
-   ```
+After reboot, check the mount status:
 
-6. Test it:
+```bash
+mount | grep ' on / '
+```
 
-   ```bash
-   sudo mount -a
-   ls /media/usb
-   ```
+Look for `(ro,...)` in the mount options, confirming read-only root.
 
-If you see the contents of your USB, it will now auto-mount at boot time.
+---
+
+## Tmpfs for Writable Temporary Directories
+
+To minimize writes to the SD card, mount these tmpfs filesystems by adding to `/etc/fstab`:
+
+```
+tmpfs /tmp tmpfs defaults,noatime,nosuid,nodev,size=100m 0 0
+tmpfs /var/tmp tmpfs defaults,noatime,nosuid,nodev,size=50m 0 0
+tmpfs /var/log tmpfs defaults,noatime,nosuid,nodev,mode=0755,size=20m 0 0
+tmpfs /run tmpfs defaults,noatime,nosuid,nodev,mode=0755,size=10m 0 0
+```
+
+---
+
+## Configuring Kodi for Read-Only Root
+
+1. Move `.kodi` directory to the writable partition:
+
+```bash
+sudo systemctl stop mediacenter
+sudo mv /home/osmc/.kodi /mnt/writestore/kodi
+sudo ln -s /mnt/writestore/kodi /home/osmc/.kodi
+sudo chown -h osmc:osmc /home/osmc/.kodi
+```
+
+2. Make sure `/mnt/writestore` is mounted before Kodi starts.
+
+3. Adjust any permissions if needed.
+
+---
+
+## Example `/etc/fstab`
+
+```fstab
+/dev/mmcblk0p1  /boot    vfat     defaults,noatime,noauto,x-systemd.automount    0   0
+# rootfs is not mounted in fstab as we do it via initramfs. Uncomment for remount (slower boot)
+#/dev/mmcblk0p2  /    ext4      ro,noatime    0   1
+/dev/mmcblk0p3 /mnt/writestore ext4 defaults,noatime,nofail,x-systemd.device-timeout=5 0 2
+tmpfs /tmp tmpfs defaults,noatime,nosuid,nodev,size=100m 0 0
+tmpfs /var/tmp tmpfs defaults,noatime,nosuid,nodev,size=50m 0 0
+tmpfs /var/log tmpfs defaults,noatime,nosuid,nodev,mode=0755,size=20m 0 0
+tmpfs /run tmpfs defaults,noatime,nosuid,nodev,mode=0755,size=10m 0 0
+```
+
+---
+
+## Troubleshooting
+
+- If Kodi fails to start, check for permission errors or missing write access to `/home/osmc/.kodi`.
+- Make sure `/mnt/writestore` is mounted and writable.
+- Verify that tmpfs mounts exist:
+
+```bash
+mount | grep tmpfs
+```
+
+- Use `dmesg` and Kodi logs to troubleshoot startup issues.
+
+---
+
+## Summary
+
+- Use either `/etc/fstab` or `/boot/cmdline.txt` to set root read-only, **not both**.
+- Create a dedicated writable partition for Kodi and other user data.
+- Use tmpfs to reduce SD card wear from logs and temporary files.
+- Symlink Kodi config to writable partition to maintain functionality.
+
+---
+
+This setup improves system stability and SD card lifespan for OSMC on Raspberry Pi.
+
+
+
 
 ## :x: Possible issues
 
