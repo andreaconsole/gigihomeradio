@@ -19,6 +19,25 @@ GPIO.setup(DT, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 GPIO.setup(SW, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
 # --- Volume Control ---
+def get_kodi_volume():
+    try:
+        response = requests.post(
+            "http://localhost:8080/jsonrpc",
+            headers={"Content-Type": "application/json"},
+            data=json.dumps({
+                "jsonrpc": "2.0",
+                "method": "Application.GetProperties",
+                "params": {"properties": ["volume"]},
+                "id": 1
+            })
+        )
+        result = response.json()
+        return result["result"]["volume"]
+    except Exception as e:
+        print(f"[WARN] Could not read volume from Kodi: {e}")
+        return 100  # fallback
+
+
 def set_volume(volume):
     global current_volume
     volume = max(0, min(100, volume))
@@ -41,6 +60,7 @@ def mute_toggle():
 
 # --- Polling Loop ---
 print("[START] Volume control active.")
+current_volume = get_kodi_volume()
 set_volume(current_volume)
 
 try:
