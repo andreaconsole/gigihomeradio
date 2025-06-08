@@ -14,23 +14,26 @@ GPIO.setmode(GPIO.BCM)
 GPIO.setup(BUTTON_NEXT, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 GPIO.setup(BUTTON_PREV, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
-logging.info("GPIO button script started.")
+def handle_next(channel):
+    logging.info("Next button pressed.")
+    subprocess.Popen(["kodi-send", "--action=RunScript(/home/osmc/radio_player.py,next)"])
+
+def handle_prev(channel):
+    logging.info("Previous button pressed.")
+    subprocess.Popen(["kodi-send", "--action=RunScript(/home/osmc/radio_player.py,prev)"])
+
+# Attach event detection with debounce
+GPIO.add_event_detect(BUTTON_NEXT, GPIO.FALLING, callback=handle_next, bouncetime=300)
+GPIO.add_event_detect(BUTTON_PREV, GPIO.FALLING, callback=handle_prev, bouncetime=300)
+
+logging.info("GPIO button script started (interrupt mode).")
 
 try:
     while True:
-        if GPIO.input(BUTTON_NEXT) == GPIO.LOW:
-            logging.info("Next button pressed.")
-            subprocess.Popen(["kodi-send", "--action=RunScript(/home/osmc/radio_player.py,next)"])
-            time.sleep(0.5)
-
-        if GPIO.input(BUTTON_PREV) == GPIO.LOW:
-            logging.info("Previous button pressed.")
-            subprocess.Popen(["kodi-send", "--action=RunScript(/home/osmc/radio_player.py,prev)"])
-            time.sleep(0.5)
-
-        time.sleep(0.1)
+        time.sleep(1)  # Sleep to keep the script alive
 except KeyboardInterrupt:
     GPIO.cleanup()
 except Exception as e:
     logging.error("Error: %s", str(e))
     GPIO.cleanup()
+
