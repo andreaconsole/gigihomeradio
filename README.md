@@ -76,6 +76,9 @@ On the Raspberry Pi, pins are numbered physically, from top-left to bottom-right
 chmod +x install.sh
 ./install.sh
 ```
+4. Decide if you want to make your root filesystem read-only (as I did, for reduce SD card wearing and allow quick power off). In this case, just follow the instructions below. If you want to keep your SD card read/write and use e.g. the /home/osmc/Music folder to store your music, just copy radio_stations.m3u to. /home/osmc/Music and update radio_player.py accordingly (i.e. STATION_FILE = "/mnt/writestore/stations.m3u" will become STATION_FILE = "/home/osmc/Music/stations.m3u")
+
+5. For any issue, check the last section of this readme. I will update it with common issues as soon as I discover them.
 
 Enjoy!
 
