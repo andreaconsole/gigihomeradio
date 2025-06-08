@@ -1,0 +1,13 @@
+[Unit]
+Description=GPIO Web Radio Button Controller
+Wants=network-online.target
+After=network-online.target kodi.service
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/python3 /home/osmc/gpio_radio_button.py
+User=root
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
