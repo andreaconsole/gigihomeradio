@@ -1,6 +1,8 @@
 import RPi.GPIO as GPIO
 import time
 import os
+import requests
+import json
 
 # GPIO pins
 CLK = 5     # Rotary encoder pin 1
@@ -37,14 +39,26 @@ def get_kodi_volume():
         print(f"[WARN] Could not read volume from Kodi: {e}")
         return 100  # fallback
 
-
 def set_volume(volume):
     global current_volume
     volume = max(0, min(100, volume))
     if volume != current_volume:
         current_volume = volume
-        os.system(f'kodi-send --action="SetVolume({volume})"')
-        print(f"[VOLUME] {volume}%")
+        try:
+            requests.post(
+                "http://localhost:8080/jsonrpc",
+                headers={"Content-Type": "application/json"},
+                data=json.dumps({
+                    "jsonrpc": "2.0",
+                    "method": "Application.SetVolume",
+                    "params": {"volume": volume},
+                    "id": 1
+                })
+            )
+            print(f"[VOLUME] {volume}%")
+        except Exception as e:
+            print(f"[ERROR] Failed to set volume: {e}")
+
 
 def mute_toggle():
     global muted, last_volume, current_volume
@@ -74,7 +88,7 @@ try:
                 set_volume(current_volume + 2)
             else:
                 set_volume(current_volume - 2)
-            time.sleep(0.05)
+            time.sleep(0.1)
         clk_last = clk_now
 
         if GPIO.input(SW) == GPIO.LOW:
