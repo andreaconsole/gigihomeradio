@@ -7,12 +7,6 @@ CLK = 5     # Rotary encoder CLK
 DT = 6      # Rotary encoder DT
 SW = 13     # Pushbutton for mute
 
-# Volume state
-current_volume = 100
-last_volume = current_volume
-muted = False
-last_clk_state = GPIO.input(CLK)
-
 # Setup GPIO
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(CLK, GPIO.IN, pull_up_down=GPIO.PUD_UP)
@@ -64,6 +58,12 @@ GPIO.add_event_detect(SW, GPIO.FALLING, callback=mute_volume, bouncetime=300)
 
 # Init
 print("[START] Kodi volume control active.")
+
+# Volume state
+current_volume = 100
+last_volume = current_volume
+muted = False
+last_clk_state = GPIO.input(CLK)
 set_volume(current_volume)
 
 try:
