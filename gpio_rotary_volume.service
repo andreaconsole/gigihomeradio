@@ -1,0 +1,13 @@
+[Unit]
+Description=Kodi Rotary Encoder Volume Control
+After=multi-user.target
+
+[Service]
+Type=simple
+User=root
+ExecStart=/usr/bin/python3 /home/osmc/gpio_rotary_volume.py
+Restart=always
+RestartSec=2
+
+[Install]
+WantedBy=multi-user.target
